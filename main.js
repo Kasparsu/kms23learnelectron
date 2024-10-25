@@ -12,7 +12,8 @@ function createWindow () {
     // fullscreenable: false,
     // minimizable: false,
     // closable: false,
-    // frame: false,
+    frame: false,
+    transparent: true,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')
     }
