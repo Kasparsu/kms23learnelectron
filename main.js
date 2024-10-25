@@ -1,12 +1,18 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, ipcMain } = require('electron')
 const path = require('node:path')
-
+const fs = require('node:fs');
 function createWindow () {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    // movable:false,
+    // resizable: false,
+    // fullscreenable: false,
+    // minimizable: false,
+    // closable: false,
+    // frame: false,
     webPreferences: {
       preload: path.join(__dirname, 'preload.js')
     }
@@ -16,13 +22,24 @@ function createWindow () {
   mainWindow.loadFile('index.html')
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
+
+
 }
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
+  ipcMain.handle('get-files', (event, path) => {
+    let files = fs.readdirSync(path, {withFileTypes:true});
+    console.log(files);
+    return files.map(file => {
+      return { name: file.name, isDir: file.isDirectory() };
+    });
+  });
+
+
   createWindow()
 
   app.on('activate', function () {

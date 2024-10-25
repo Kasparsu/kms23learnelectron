@@ -1,7 +1,19 @@
-/**
- * This file is loaded via the <script> tag in the index.html file and will
- * be executed in the renderer process for that window. No Node.js APIs are
- * available in this process because `nodeIntegration` is turned off and
- * `contextIsolation` is turned on. Use the contextBridge API in `preload.js`
- * to expose Node.js functionality from the main process.
- */
+document.addEventListener('DOMContentLoaded', async () => {
+
+    const filesEl = document.querySelector('#files');
+    let files = await window.electronAPI.getFiles('C:\\');
+    files.forEach(file => {
+        let fileEl = document.createElement('li');
+        fileEl.innerText = file.name;
+        if(file.isDir == true){
+            fileEl.addEventListener('click', () => {
+                console.log('click');
+            });
+        }
+        filesEl.append(fileEl);
+    });
+    
+    console.log(files);
+
+});
+
